@@ -1,0 +1,70 @@
+<html>
+<head>
+  <title>Geolocation Demonstration</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  
+  // element where we will output either our location or the error
+  var x = document.getElementById("whereami");
+  
+  // success function 
+  function showPosition(position) {
+
+    // the success is given a position object containing latitude and longitude 
+    // data by getGetCurrentPosition, let's output the latitude and longitude
+    x.innerHTML = "Latitude: " + position.coords.latitude +
+    "<br>Longitude: " + position.coords.longitude;
+    
+    // check out what the position object looks like in the sconsole
+    console.log(position);
+  }
+  
+  // error function
+  function showError(error) {
+    
+    // the error function is given an error object containing a code property 
+    // that we can look at to determine which error occurred...
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+        x.innerHTML = "User denied the request for Geolocation."
+        break;
+      case error.POSITION_UNAVAILABLE:
+        x.innerHTML = "Location information is unavailable."
+        break;
+      case error.TIMEOUT:
+        x.innerHTML = "The request to get user location timed out."
+        break;
+      case error.UNKNOWN_ERROR:
+        x.innerHTML = "An unknown error occurred."
+        break;
+    }
+  }
+  
+  // we'll call this function to perform geolocation
+  function getLocation() {
+
+    // if navigator.geolocation doesn't exist, the browser does not support 
+    // geolocaation... geolocation is an HTML5 feature so virtually all browers
+    // now support it
+    if (navigator.geolocation) {
+
+      // call getCurrentPosition, give it our success and error functions
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+
+    } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+ 
+  // call the getLocation function when the user clicks the geolocate button
+  document.getElementById("geolocate").onclick = getLocation;
+
+});
+</script>
+<body>
+  <button id="geolocate">Geolocate</button> <br />
+  <p>Your geolocation is... <br /> <br /> <span id="whereami"></span> </p>
+</body>
+</html>
